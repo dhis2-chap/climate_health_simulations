@@ -1,24 +1,29 @@
 import numpy as np
 import pandas as pd
 import plotly.express as px
+from simulator.ClimateData import ClimateData
 
 
 class ClimateHealth:
-    def __init__(self, rainfall, disease_cases, max_lag, temperature=None, season=None):
-        self.rainfall = rainfall
-        self.temperature = temperature
-        self.season = season
-        self.max_lag = max_lag
+    def __init__(self, climate_data: ClimateData, disease_cases: np.ndarray, max_lag: int):
+        self.climate_data = climate_data
         self.disease_cases = disease_cases
+        self.max_lag = max_lag
 
     def get_data(self):
-        if self.rainfall is not None:
-            df = pd.DataFrame({'rainfall': self.rainfall, 'disease_cases': self.disease_cases})
-        else:
-            df = pd.DataFrame({'disease_cases': self.disease_cases})
+        if len(self.disease_cases) != len(self.climate_data.rainfall):
+            self.disease_cases = np.insert(self.disease_cases, 0, 0)
+        # print(len(self.disease_cases))
+        # print(len(self.climate_data.rainfall))
+        # print(len(self.climate_data.temperature))
+        # print(len(self.climate_data.season))
+        # print(len(self.climate_data.population))
+        df = pd.DataFrame({'time_period': self.climate_data.season,
+                           'rainfall': self.climate_data.rainfall,
+                           'temperature': self.climate_data.temperature,
+                           'disease_cases': self.disease_cases,
+                           'population': self.climate_data.population})
         df.loc[:(self.max_lag - 1), 'disease_cases'] = None
-        if self.temperature is not None:
-            df.insert(1, 'temperature', self.temperature)
         return df
 
     def plot_data(self):

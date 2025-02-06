@@ -1,70 +1,44 @@
 import numpy as np
-from config.SimulationConfig import SimulationConfig
+import yaml
+from config.SimulationConfig import IndependentVariable, ExplanatoryVariable, DependentVariable, Config
+from simulator.ClimateData import ClimateData
 from simulator.ClimateHealth import ClimateHealth
-from simulator.diseases.DiseaseCases import DiseaseCases
-from simulator.rainfall.RealisticRainfallGenerator import RealisticRainfallGenerator
-from simulator.temperature.RealisticTemperatureGenerator import RealisticTemperatureGenerator
+from simulator.diseases.DiseaseCasesGeneratorFactory import DiseaseCasesGeneratorFactory
+from simulator.population.PopulationGeneratorFactory import PopulationGeneratorFactory
+from simulator.rainfall.RainfallGeneratorFactory import RainfallGeneratorFactory
+from simulator.temperature.TemperatureGeneratorFactory import TemperatureGeneratorFactory
 
 
 class Simulator:
-    def __init__(self, n_time_points: int, lag_rain: int = None, lag_temperature: int = None, population:np.float32 = None):
-        # self.config = config
-        # self.climate_health = climate_health
-        self.n_time_points = n_time_points
-        self.lag_rain = lag_rain
-        self.lag_temperature = lag_temperature
-        self.population = population
-        # self.results = []
+    def __init__(self, config_path: str):
+        with open(config_path, 'r') as f:
+            config_data = yaml.safe_load(f)
+        try:
+            self.config = Config(**config_data)
+        except Exception as e:
+            raise ValueError(f"Invalid configuration: {e}")
+        self.rain_factory = RainfallGeneratorFactory()
+        self.temp_factory = TemperatureGeneratorFactory()
+        self.population_factory = PopulationGeneratorFactory()
+        self.disease_cases_generator = DiseaseCasesGeneratorFactory()
 
-    def simulate_linear_lag3_dependency(self):
-        pass
+    def run(self):
+        rain_is_realistic, rain_season_dependent,  = self.config.get_independent_variable_properties("rain")
+        temp_is_realistic, temp_season_dependent = self.config.get_independent_variable_properties("temperature")
 
-    def simulate_realistic_rain_linear_lag3_dependency(self):
-        rainfall_generator = RealisticRainfallGenerator()
-        rainfall = rainfall_generator.generate(self.n_time_points)
-        disease_cases = DiseaseCases()
-        disease_cases = disease_cases.generate_rainfall_only(rainfall, self.lag_rain)
-        return ClimateHealth(rainfall, disease_cases, self.lag_rain)
+        rain_gen = self.rain_factory.create_generator(rain_is_realistic, rain_season_dependent)
+        temp_gen = self.temp_factory.create_generator(temp_is_realistic, temp_season_dependent)
+        disease_cases_gen = self.disease_cases_generator.create_generator(self.config.dependent_variable)
+        pop_gen = self.population_factory.create_generator(False)  # todo: fix this to be dynamic
 
-    def simulate_realistic_rain3_temp1_linear_dependency(self):
-        rainfall_generator = RealisticRainfallGenerator()
-        rainfall = rainfall_generator.generate(self.n_time_points)
-        temperature_generator = RealisticTemperatureGenerator()
-        temperature = temperature_generator.generate(self.n_time_points)
-        disease_cases = DiseaseCases()
-        disease_cases = disease_cases.generate_rainfall_and_temp(rainfall, temperature, self.lag_rain,
-                                                                 self.lag_temperature)
-        return ClimateHealth(rainfall, disease_cases, max(self.lag_rain, self.lag_temperature), temperature)
+        # Generate climate data
+        season = (np.arange(self.config.n_time_points) % 12) + 1
+        rainfall = rain_gen.generate(self.config.n_time_points)
+        temperature = temp_gen.generate(self.config.n_time_points)
+        population = pop_gen.generate(self.config.n_time_points, self.config.dependent_variable.population)
+        climate_data = ClimateData(rainfall, temperature, season, population)
 
-    def simulate_autoregressive_independent_rainfall(self):
-        rainfall_generator = RealisticRainfallGenerator()
-        rainfall = rainfall_generator.generate(self.n_time_points)
-        disease_cases = DiseaseCases()
-        disease_cases = disease_cases.generate_autoregressive_independent_of_covariates(self.n_time_points,
-                                                                                        self.population)
-        return ClimateHealth(rainfall, disease_cases, self.lag_rain)
+        disease_cases = disease_cases_gen.generate(climate_data)
+        climate_health = ClimateHealth(climate_data, disease_cases, self.config.get_max_lag())
+        return climate_health
 
-
-    def simulate_cases(self):
-        rain = self.climate_health.rainfall
-        temp = self.climate_health.temperature
-        baseline_cases = self.climate_health.disease_cases.baseline_cases
-
-        if self.config.non_linear_effects:
-            cases = np.exp(rain) + np.log(temp)
-        else:
-            cases = rain * 0.5 + temp * 0.3
-
-        if self.config.use_interactions:
-            cases += rain * temp * 0.1
-
-        # Additional logic for lag and autoregressive effects
-
-        return max(0, baseline_cases + int(cases))
-
-    def run_simulation(self):
-        cases = self.simulate_cases()
-        self.results.append((self.climate_health.season.name, cases))
-
-    def get_results(self):
-        return self.results

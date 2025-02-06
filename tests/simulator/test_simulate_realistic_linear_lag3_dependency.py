@@ -1,6 +1,6 @@
 import numpy as np
 
-from simulator.Simulator import Simulator
+from simulator.deprecated_Simulator import Simulator
 
 
 def test_simulate_realistic_linear_lag3_dependency():

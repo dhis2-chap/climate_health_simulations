@@ -1,5 +1,9 @@
+import numpy as np
+
 from simulator.rainfall.RainfallGenerator import RainfallGenerator
 from chap_core.data.datasets import ISIMIP_dengue_harmonized
+
+from simulator.util import standardize_variable
 
 
 class RealisticRainfallGenerator(RainfallGenerator):
@@ -7,6 +11,9 @@ class RealisticRainfallGenerator(RainfallGenerator):
         df = ISIMIP_dengue_harmonized['brazil'].to_pandas()
         rainfall = df['rainfall'].values[:n_time_points]
         rainfall = (rainfall/rainfall.max())*4
-        return rainfall
+        scaled_rainfall = standardize_variable(rainfall)
+        desired_indices = np.arange(n_time_points) % len(scaled_rainfall)
+        scaled_rainfall = scaled_rainfall[desired_indices]
+        return scaled_rainfall.flatten()
 
 

@@ -1,8 +1,8 @@
-from chap_core.data.datasets import ISIMIP_dengue_harmonized
+from abc import abstractmethod, ABC
 
 
-class RealisticPopulationGenerator:
-    def generate(self, n_time_points: int):
-        df = ISIMIP_dengue_harmonized['brazil'].to_pandas()
-        population = df['population'].values[:n_time_points]
-        return population
+class PopulationGenerator(ABC):
+    @abstractmethod
+    def generate(self, n_time_points: int, population: int = None):
+        pass
+
