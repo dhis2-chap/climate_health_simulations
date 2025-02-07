@@ -23,10 +23,10 @@ def config_covariate_independent_autoregressive():
 
 def test_covariate_independent_autoregressive(config_covariate_independent_autoregressive, tmp_path):
     simulation_config_path = tmp_path / 'simulation_config.yaml'
-    print(simulation_config_path)
+    # print(simulation_config_path)
     with open(simulation_config_path, 'w') as f:
         yaml.dump(config_covariate_independent_autoregressive, f)
     simulator = Simulator(simulation_config_path)
     climate_health = simulator.run()
     data = climate_health.get_data()
-    print(data)
+    # print(data)

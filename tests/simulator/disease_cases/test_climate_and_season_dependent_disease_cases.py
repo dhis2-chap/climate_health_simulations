@@ -50,12 +50,12 @@ def test_climate_and_season_dependent_disease_case_non_autoregressive(dependent_
     assert abs(correlation) > 0.7, "Disease cases should exhibit some correlation with seasonal weights."
     assert np.all(disease_cases >= 0), "Disease cases should be non-negative."
     assert np.all(disease_cases <= climate_data.population[0]), "Disease cases should not exceed population."
-    fig = px.line(x=range(len(climate_data.rainfall)), y=climate_data.rainfall, title="Rainfall")
-    fig.show()
-    fig = px.line(x=range(len(seasonal_influence)), y=seasonal_influence, title="Season weights")
-    fig.show()
-    fig = px.line(x=range(len(disease_cases)), y=disease_cases, title="Disease Cases")
-    fig.show()
+    # fig = px.line(x=range(len(climate_data.rainfall)), y=climate_data.rainfall, title="Rainfall")
+    # fig.show()
+    # fig = px.line(x=range(len(seasonal_influence)), y=seasonal_influence, title="Season weights")
+    # fig.show()
+    # fig = px.line(x=range(len(disease_cases)), y=disease_cases, title="Disease Cases")
+    # fig.show()
 
 def test_climate_and_season_dependent_disease_case_autoregressive(dependent_variable_config_autoregressive, climate_data):
     np.random.seed(2025)
@@ -75,9 +75,9 @@ def test_climate_and_season_dependent_disease_case_autoregressive(dependent_vari
     assert np.all(disease_cases <= climate_data.population[0]), "Disease cases should not exceed population."
     correlation_autoregressive = np.corrcoef(disease_cases[:-1], disease_cases[1:])[0, 1]
     assert abs(correlation_autoregressive) > 0.6, "Disease cases do not exhibit a strong autoregressive pattern."
-    fig = px.line(x=range(len(climate_data.rainfall)), y=climate_data.rainfall, title="Rainfall")
-    fig.show()
-    fig = px.line(x=range(len(seasonal_influence)), y=seasonal_influence, title="Season weights")
-    fig.show()
-    fig = px.line(x=range(len(disease_cases)), y=disease_cases, title="Disease Cases")
-    fig.show()
+    # fig = px.line(x=range(len(climate_data.rainfall)), y=climate_data.rainfall, title="Rainfall")
+    # fig.show()
+    # fig = px.line(x=range(len(seasonal_influence)), y=seasonal_influence, title="Season weights")
+    # fig.show()
+    # fig = px.line(x=range(len(disease_cases)), y=disease_cases, title="Disease Cases")
+    # fig.show()

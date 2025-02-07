@@ -43,21 +43,21 @@ def config_climate_dependent_autoregressive():
 
 def test_climate_dependent_non_autoregressive(config_climate_dependent_non_autoregressive, tmp_path):
     simulation_config_path = tmp_path / 'simulation_config.yaml'
-    print(simulation_config_path)
+    # print(simulation_config_path)
     with open(simulation_config_path, 'w') as f:
         yaml.dump(config_climate_dependent_non_autoregressive, f)
     simulator = Simulator(simulation_config_path)
-    print(simulator.disease_cases_generator.create_generator(simulator.config.dependent_variable).get_name())
+    # print(simulator.disease_cases_generator.create_generator(simulator.config.dependent_variable).get_name())
     climate_health = simulator.run()
     data = climate_health.get_data()
-    print(data)
+    # print(data)
 
 def test_climate_dependent_autoregressive(config_climate_dependent_autoregressive, tmp_path):
     simulation_config_path = tmp_path / 'simulation_config.yaml'
-    print(simulation_config_path)
+    # print(simulation_config_path)
     with open(simulation_config_path, 'w') as f:
         yaml.dump(config_climate_dependent_autoregressive, f)
     simulator = Simulator(simulation_config_path)
     climate_health = simulator.run()
     data = climate_health.get_data()
-    print(data)
+    # print(data)

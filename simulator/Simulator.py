@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import yaml
 from config.SimulationConfig import IndependentVariable, ExplanatoryVariable, DependentVariable, Config

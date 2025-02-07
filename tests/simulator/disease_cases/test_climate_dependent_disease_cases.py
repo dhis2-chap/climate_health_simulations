@@ -41,10 +41,10 @@ def test_climate_dependent_disease_case_non_autoregressive(dependent_variable_co
     max_disease_cases_index = np.argmax(disease_cases)
     assert max_disease_cases_index - max_rainfall_index == 3
     assert disease_cases.shape == (10,)
-    fig = px.line(x=range(len(climate_data.rainfall)), y=climate_data.rainfall, title="Rainfall")
-    fig.show()
-    fig = px.line(x=range(len(disease_cases)), y=disease_cases, title="Disease Cases")
-    fig.show()
+    # fig = px.line(x=range(len(climate_data.rainfall)), y=climate_data.rainfall, title="Rainfall")
+    # fig.show()
+    # fig = px.line(x=range(len(disease_cases)), y=disease_cases, title="Disease Cases")
+    # fig.show()
 
 def test_climate_dependent_disease_case_autoregressive(dependent_variable_config_autoregressive, climate_data):
     np.random.seed(1234)
@@ -53,7 +53,7 @@ def test_climate_dependent_disease_case_autoregressive(dependent_variable_config
     correlation = np.corrcoef(disease_cases[:-1], disease_cases[1:])[0, 1]
     assert abs(correlation) > 0.4
     assert disease_cases.shape == (10,)
-    fig = px.line(x=range(len(climate_data.rainfall)), y=climate_data.rainfall, title="Rainfall")
-    fig.show()
-    fig = px.line(x=range(len(disease_cases)), y=disease_cases, title="Disease Cases")
-    fig.show()
+    # fig = px.line(x=range(len(climate_data.rainfall)), y=climate_data.rainfall, title="Rainfall")
+    # fig.show()
+    # fig = px.line(x=range(len(disease_cases)), y=disease_cases, title="Disease Cases")
+    # fig.show()

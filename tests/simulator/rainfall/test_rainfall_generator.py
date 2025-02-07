@@ -9,7 +9,8 @@ def test_realistic_rainfall_generator():
     rainfall_generator = RealisticRainfallGenerator()
     rainfall = rainfall_generator.generate(10)
     assert len(rainfall) == 10
-    assert all([0 <= r <= 4 for r in rainfall])
+    assert np.allclose(np.mean(rainfall), 0, atol=0.3)
+    assert np.allclose(np.std(rainfall), 1, atol=0.3)
 
 
 def test_synthetic_rainfall_generator():

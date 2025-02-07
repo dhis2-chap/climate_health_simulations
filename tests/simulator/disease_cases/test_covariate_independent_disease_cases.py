@@ -34,7 +34,7 @@ def test_covariate_independent_disease_case_autoregressive(dependent_variable_co
     print(correlation_autoregressive)
     assert np.all(disease_cases >= 0), "Disease cases should be non-negative."
     assert np.all(disease_cases <= climate_data.population[0]), "Disease cases should not exceed population."
-    fig = px.line(x=range(len(climate_data.rainfall)), y=climate_data.rainfall, title="Rainfall")
-    fig.show()
-    fig = px.line(x=range(len(disease_cases)), y=disease_cases, title="Disease Cases")
-    fig.show()
+    # fig = px.line(x=range(len(climate_data.rainfall)), y=climate_data.rainfall, title="Rainfall")
+    # fig.show()
+    # fig = px.line(x=range(len(disease_cases)), y=disease_cases, title="Disease Cases")
+    # fig.show()

@@ -72,8 +72,8 @@ def test_climate_and_season_dependent_non_autoregressive(config_climate_and_seas
     simulator = Simulator(simulation_config_path)
     climate_health = simulator.run()
     data = climate_health.get_data()
-    print(data)
-    climate_health.plot_data()
+    # print(data)
+    # climate_health.plot_data()
 
 def test_climate_and_season_dependent_autoregressive(config_climate_and_season_dependent_autoregressive, tmp_path):
     simulation_config_path = tmp_path / 'simulation_config.yaml'
@@ -83,4 +83,4 @@ def test_climate_and_season_dependent_autoregressive(config_climate_and_season_d
     simulator = Simulator(simulation_config_path)
     climate_health = simulator.run()
     data = climate_health.get_data()
-    print(data)
+    # print(data)

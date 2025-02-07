@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import json
 import plotly.express as px
 from simulator.ClimateData import ClimateData
 
@@ -21,9 +22,9 @@ class ClimateHealth:
         df.loc[:(self.max_lag - 1), 'disease_cases'] = None
         return df
 
-    def plot_data(self):
+    def plot_data(self, output_path=None, config_dict=None):
         df = self.get_data()
-        df = df.drop(columns='time_period')
+        df = df.drop(columns=['time_period', 'population'])
         df = df.reset_index().melt(id_vars='index', var_name='variable', value_name='value')
         df = df.rename(columns={'index': 'Month'})
         fig = px.line(df, x='Month', title='Climate and Health Data', facet_row='variable', y='value')
@@ -32,4 +33,36 @@ class ClimateHealth:
             fig.update_yaxes(title_text=var_name, row=i + 1)
         for annotation in fig['layout']['annotations']:
             annotation['text'] = ''
-        fig.show()
+        if config_dict is not None:
+            fig = self._print_config_on_plot(config_dict, fig)
+        if output_path:
+            fig.write_html(output_path)
+        else:
+            fig.show()
+
+    def _print_config_on_plot(self, config_dict, fig):
+        config_str = json.dumps(config_dict, indent=2)
+        fig.add_annotation(
+            x=0.05,  # Left position (5% from left)
+            y=0.95,  # Top position (95% from bottom)
+            xref="paper",
+            yref="paper",
+            text=f"<b>Configuration:</b>\n<pre>{config_str}</pre>",
+            showarrow=False,
+            align="left",
+            font=dict(
+                family="Courier New, monospace",
+                size=10,
+                color="#ffffff"
+            ),
+            bordercolor="#c7c7c7",
+            borderwidth=2,
+            borderpad=4,
+            bgcolor="#2d3436"
+        )
+        fig.update_layout(margin=dict(l=150, r=20, t=40, b=20))
+        return fig
+
+    def save_data(self, output_path):
+        df = self.get_data()
+        df.to_csv(output_path, index=False)

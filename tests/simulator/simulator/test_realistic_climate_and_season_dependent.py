@@ -7,8 +7,8 @@ from simulator.Simulator import Simulator
 def config_climate_and_season_dependent_non_autoregressive():
     config = {
         'independent_variables': [
-            {'type': 'rain', 'is_realistic': True, 'is_season_dependent': False},
-            {'type': 'temperature', 'is_realistic': True, 'is_season_dependent': False},
+            {'type': 'rain', 'is_realistic': True, 'is_season_dependent': True},
+            {'type': 'temperature', 'is_realistic': True, 'is_season_dependent': True},
             {'type': 'season', 'is_realistic': False},
         ],
         'dependent_variable': {
@@ -27,8 +27,8 @@ def config_climate_and_season_dependent_non_autoregressive():
 def config_climate_and_season_dependent_autoregressive():
     config = {
         'independent_variables': [
-            {'type': 'rain', 'is_realistic': True, 'is_season_dependent': False},
-            {'type': 'temperature', 'is_realistic': True, 'is_season_dependent': False},
+            {'type': 'rain', 'is_realistic': True, 'is_season_dependent': True},
+            {'type': 'temperature', 'is_realistic': True, 'is_season_dependent': True},
             {'type': 'season', 'is_realistic': False},
         ],
         'dependent_variable': {
@@ -51,7 +51,7 @@ def test_climate_and_season_dependent_non_autoregressive(config_climate_and_seas
     simulator = Simulator(simulation_config_path)
     climate_health = simulator.run()
     data = climate_health.get_data()
-    print(data)
+    # print(data)
 
 def test_climate_and_season_dependent_autoregressive(config_climate_and_season_dependent_autoregressive, tmp_path):
     simulation_config_path = tmp_path / 'simulation_config.yaml'
@@ -61,4 +61,4 @@ def test_climate_and_season_dependent_autoregressive(config_climate_and_season_d
     simulator = Simulator(simulation_config_path)
     climate_health = simulator.run()
     data = climate_health.get_data()
-    print(data)
+    # print(data)
