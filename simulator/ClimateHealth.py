@@ -13,11 +13,6 @@ class ClimateHealth:
     def get_data(self):
         if len(self.disease_cases) != len(self.climate_data.rainfall):
             self.disease_cases = np.insert(self.disease_cases, 0, 0)
-        # print(len(self.disease_cases))
-        # print(len(self.climate_data.rainfall))
-        # print(len(self.climate_data.temperature))
-        # print(len(self.climate_data.season))
-        # print(len(self.climate_data.population))
         df = pd.DataFrame({'time_period': self.climate_data.season,
                            'rainfall': self.climate_data.rainfall,
                            'temperature': self.climate_data.temperature,
@@ -28,6 +23,7 @@ class ClimateHealth:
 
     def plot_data(self):
         df = self.get_data()
+        df = df.drop(columns='time_period')
         df = df.reset_index().melt(id_vars='index', var_name='variable', value_name='value')
         df = df.rename(columns={'index': 'Month'})
         fig = px.line(df, x='Month', title='Climate and Health Data', facet_row='variable', y='value')

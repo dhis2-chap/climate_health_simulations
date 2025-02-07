@@ -21,6 +21,8 @@ class IndependentVariable(BaseModel):
             raise ValueError('season cannot have is_season_dependent attribute')
         if self.type != 'season' and self.is_realistic is None:
             raise ValueError('rain and temperature must have is_realistic attribute')
+        if self.is_realistic and not self.is_season_dependent:
+            raise ValueError('rain and temperature cannot be realistic and not season dependent')
         return self
 
 

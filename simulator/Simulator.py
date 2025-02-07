@@ -22,7 +22,7 @@ class Simulator:
         self.population_factory = PopulationGeneratorFactory()
         self.disease_cases_generator = DiseaseCasesGeneratorFactory()
 
-    def run(self):
+    def run(self) -> ClimateHealth:
         rain_is_realistic, rain_season_dependent,  = self.config.get_independent_variable_properties("rain")
         temp_is_realistic, temp_season_dependent = self.config.get_independent_variable_properties("temperature")
 
