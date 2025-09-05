@@ -2,12 +2,16 @@ import numpy as np
 
 from config.SimulationConfig import Config, DependentVariable
 from simulator.ClimateData import ClimateData
-from simulator.util import apply_sigmoid_scaling_to_cases
+from simulator.util import apply_sigmoid_scaling_to_cases, apply_sigmoid_and_poisson_projection_with_capping
 
 
 class CovariateIndependentDiseaseCases:
     def __init__(self, config: DependentVariable):
         self.config = config
+        #todo: make also not autoregressive version
+        #todo: never insert zero at the start
+        #todo: see if Ingar could try out EWARS models can be run on one simulated dataset run through chap python
+        #todo: Martin could support all the simulations in his DSL
 
     def generate(self, climate_data: ClimateData) -> np.ndarray:
         return self.generate_autoregressive(climate_data.population)
@@ -16,7 +20,7 @@ class CovariateIndependentDiseaseCases:
         white_noise = np.random.normal(0, 0.2, size=len(population) - 1)
         disease_cases = np.cumsum(white_noise)
         disease_cases = np.insert(disease_cases, 0, 0) - 0.5
-        disease_cases = apply_sigmoid_scaling_to_cases(disease_cases, population)
+        disease_cases = apply_sigmoid_and_poisson_projection_with_capping(disease_cases, population)
         return disease_cases
 
     def get_name(self):

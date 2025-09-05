@@ -58,6 +58,8 @@ class DependentVariable(BaseModel):
             raise ValueError("population must be an integer in string format")
         return values
 
+    # check that covariate_independent case is only autoregressive
+
 
 class Config(BaseModel):
     independent_variables: List[IndependentVariable]

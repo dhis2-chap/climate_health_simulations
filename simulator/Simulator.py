@@ -44,3 +44,4 @@ class Simulator:
         climate_health = ClimateHealth(climate_data, disease_cases, self.config.get_max_lag())
         return climate_health
 
+

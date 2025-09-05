@@ -44,6 +44,8 @@ def config_climate_and_season_dependent_autoregressive():
     }
     return config
 
+# You could for instance generate 100 data points in each simulation, use both autoregressive and non-autoregressive models, and choose different types of disease models.
+
 @pytest.fixture
 def config_climate_dependent():
     config = {

@@ -37,9 +37,11 @@ class ClimateDependentDiseaseCases:
             scaled_covariate = standardize_variable(lagged_covariate[1:])
             white_noise += scaled_covariate.flatten() * 0.5
         disease_cases = np.cumsum(white_noise)
-        disease_cases = np.insert(disease_cases, 0, 0) - 0.5
-        disease_cases = apply_sigmoid_scaling_to_cases(disease_cases, climate_data.population)
-        return disease_cases
+        disease_cases = np.insert(disease_cases, 0, 0) - 0.5  #todo: this 0.5 should be configurable
+        disease_cases = apply_sigmoid_scaling_to_cases(disease_cases,
+                                                       climate_data.population)  # todo: does it matter if we start
+        #todo: low or whether start at 50%
+        return disease_cases  #todo: think if it is possible have log instead of sigmoid
 
     def get_explanatory_climate_data(self, climate_data):
         climate_data = [(climate_data.rainfall, var.lag) if var.type == 'rain' else (

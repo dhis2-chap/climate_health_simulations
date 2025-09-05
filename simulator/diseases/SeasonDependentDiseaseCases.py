@@ -8,6 +8,7 @@ from simulator.util import apply_sigmoid_and_poisson_projection_with_capping, ge
 class SeasonDependentDiseaseCases:
     def __init__(self, config: DependentVariable):
         self.config = config
+        #todo: add white noise to both methods
 
     def generate(self, climate_data: ClimateData):
         if self.config.is_autoregressive:

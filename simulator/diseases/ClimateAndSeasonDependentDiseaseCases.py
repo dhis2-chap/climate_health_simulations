@@ -10,6 +10,7 @@ from simulator.util import generate_season_weights, standardize_variable, apply_
 class ClimateAndSeasonDependentDiseaseCases(DiseaseCases):
     def __init__(self, config: DependentVariable):
         self.config = config
+        #todo: add white noise to both methods
 
     def generate(self, climate_data: ClimateData):
         if self.config.is_autoregressive:
