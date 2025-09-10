@@ -1,6 +1,6 @@
 import pytest
 import yaml
-from simulator.Simulator import Simulator
+from climate_health_simulations.simulator.Simulator import Simulator
 
 
 @pytest.fixture

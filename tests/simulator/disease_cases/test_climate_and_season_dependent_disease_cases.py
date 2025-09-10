@@ -1,10 +1,10 @@
 import numpy as np
 import pytest
 import plotly.express as px
-from config.SimulationConfig import DependentVariable
-from simulator.ClimateData import ClimateData
-from simulator.diseases.ClimateAndSeasonDependentDiseaseCases import ClimateAndSeasonDependentDiseaseCases
-from simulator.util import generate_season_weights, apply_lag, standardize_variable
+from climate_health_simulations.config.SimulationConfig import DependentVariable
+from climate_health_simulations.simulator.ClimateData import ClimateData
+from climate_health_simulations.simulator.diseases.ClimateAndSeasonDependentDiseaseCases import ClimateAndSeasonDependentDiseaseCases
+from climate_health_simulations.simulator.util import generate_season_weights, apply_lag, standardize_variable
 
 
 @pytest.fixture

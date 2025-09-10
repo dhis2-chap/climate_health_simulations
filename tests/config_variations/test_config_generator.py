@@ -1,7 +1,7 @@
 import pytest
 
-from config.SimulationConfig import Config
-from config.config_variations.ConfigGenerator import ConfigGenerator
+from climate_health_simulations.config.SimulationConfig import Config
+from climate_health_simulations.config.config_variations.ConfigGenerator import ConfigGenerator
 
 
 class TestConfigGeneration:

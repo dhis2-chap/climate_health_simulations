@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "climate_health_simulations"
+version = "0.1.0"
+description = "Simulation tools for studying the relationship between climate and health"
+authors = [
+    { name = "Halvard", email = "halvares@uio.no" }, {name = "Chakri", email = "skanduri@ifi.uio.no" }
+]
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }  # change if you prefer another license
+
+dependencies = [
+    "numpy",
+    "chap_core",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
