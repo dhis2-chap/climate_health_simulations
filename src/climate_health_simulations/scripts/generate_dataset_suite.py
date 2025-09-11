@@ -3,7 +3,7 @@ import yaml
 from climate_health_simulations.config.SimulationConfig import Config
 from climate_health_simulations.config.config_variations.ConfigGenerator import ConfigGenerator
 from climate_health_simulations.simulator.Simulator import Simulator
-
+from pathlib import Path
 
 def get_base_config():
     config = {
@@ -50,6 +50,13 @@ def generate_datasets(output_path):
         climate_health.save_data(data_path)
         climate_health.plot_data(plot_path)
 
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+OUTPUT_DIR = PROJECT_ROOT / "toy_simulations"
 
-if __name__ == '__main__':
-    generate_datasets("/Users/skanduri/Documents/Projects/climate_health/toy_simulations")
+if __name__ == "__main__":
+    print(PROJECT_ROOT)
+    generate_datasets(OUTPUT_DIR)
+
+#if __name__ == '__main__':
+   # generate_datasets("/Users/Halvard/Documents/Github/climate_health_simulations/toy_simulations")
+    #generate_datasets("/Users/skanduri/Documents/Projects/climate_health/toy_simulations")
