@@ -34,14 +34,14 @@ class Simulator:
         pop_gen = self.population_factory.create_generator(False)  # todo: fix this to be dynamic
 
         # Generate climate data
-        season = (np.arange(self.config.n_time_points) % 12) + 1
-        rainfall = rain_gen.generate(self.config.n_time_points)
-        temperature = temp_gen.generate(self.config.n_time_points)
-        population = pop_gen.generate(self.config.n_time_points, self.config.dependent_variable.population)
+        season = (np.arange(self.config.n_time_points_train + self.config.n_time_points_test) % 12) + 1
+        rainfall = rain_gen.generate(self.config.n_time_points_train, self.config.n_time_points_test)
+        temperature = temp_gen.generate(self.config.n_time_points_train, self.config.n_time_points_test)
+        population = pop_gen.generate(self.config.n_time_points_train + self.config.n_time_points_test, self.config.dependent_variable.population)
         climate_data = ClimateData(rainfall, temperature, season, population)
 
         disease_cases = disease_cases_gen.generate(climate_data)
-        climate_health = ClimateHealth(climate_data, disease_cases, self.config.get_max_lag())
+        climate_health = ClimateHealth(climate_data, disease_cases, self.config.get_max_lag(), self.config.n_time_points_train)
         return climate_health
 
 

@@ -1,2 +1,3 @@
 *.pyc
 /toy_simulations
+.DS_Store

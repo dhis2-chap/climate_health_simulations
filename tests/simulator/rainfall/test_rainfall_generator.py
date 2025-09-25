@@ -7,21 +7,24 @@ from climate_health_simulations.simulator.rainfall.SyntheticRainfallGenerator im
 
 def test_realistic_rainfall_generator():
     rainfall_generator = RealisticRainfallGenerator()
-    rainfall = rainfall_generator.generate(10)
-    assert len(rainfall) == 10
+    rainfall = rainfall_generator.generate(10, 5)
+    assert len(rainfall) == 10 + 5
     assert np.allclose(np.mean(rainfall), 0, atol=0.3)
     assert np.allclose(np.std(rainfall), 1, atol=0.3)
 
 
 def test_synthetic_rainfall_generator():
     rainfall_generator = SyntheticRainfallGenerator()
-    rainfall = rainfall_generator.generate(10)
-    assert np.argmax(rainfall) == len(rainfall) // 2
+    rainfall = rainfall_generator.generate(10, 5)
+    assert np.count_nonzero(rainfall) == max(1, 10//4) + max(1, 5//4)
+    #assert np.argmax(rainfall) == len(rainfall) // 2
+
 
 def test_synthetic_rainfall_dependent_on_season():
-    n_time_points = 10
+    n_time_points_train = 10
+    n_time_points_test = 5
     rainfall_generator = SyntheticRainfallDependentOnSeasonGenerator()
-    rainfall = rainfall_generator.generate(n_time_points)
+    rainfall = rainfall_generator.generate(n_time_points_train, n_time_points_test)
     max_indices = np.argsort(rainfall)[-2:]
     min_indices = np.argsort(rainfall)[:2]
     assert np.allclose(rainfall[max_indices], 4.0, atol=0.3)

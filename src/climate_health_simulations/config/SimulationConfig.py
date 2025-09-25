@@ -64,7 +64,8 @@ class DependentVariable(BaseModel):
 class Config(BaseModel):
     independent_variables: List[IndependentVariable]
     dependent_variable: DependentVariable
-    n_time_points: int = Field(gt=0)
+    n_time_points_train: int = Field(gt=0)
+    n_time_points_test: int = Field(gt=0)
 
     def get_max_lag(self):
         max_lag = 0

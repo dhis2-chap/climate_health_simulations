@@ -6,10 +6,11 @@ from climate_health_simulations.simulator.ClimateData import ClimateData
 
 
 class ClimateHealth:
-    def __init__(self, climate_data: ClimateData, disease_cases: np.ndarray, max_lag: int):
+    def __init__(self, climate_data: ClimateData, disease_cases: np.ndarray, max_lag: int, n_time_points_train: int):
         self.climate_data = climate_data
         self.disease_cases = disease_cases
         self.max_lag = max_lag
+        self.n_time_points_train = n_time_points_train
 
     def get_data(self):
         if len(self.disease_cases) != len(self.climate_data.rainfall):
@@ -33,6 +34,14 @@ class ClimateHealth:
             fig.update_yaxes(title_text=var_name, row=i + 1)
         for annotation in fig['layout']['annotations']:
             annotation['text'] = ''
+
+        # --- Add vertical line at n_time_points_train + 0.5 ---
+        train_test_split = self.n_time_points_train + 0.5
+        n_vars = len(df['variable'].unique())
+
+        for row in range(1, n_vars + 1):
+            fig.add_vline(x=train_test_split, line_width=2, line_dash="dash", line_color="red", row=row, col=1)
+
         if config_dict is not None:
             fig = self._print_config_on_plot(config_dict, fig)
         if output_path:
