@@ -16,11 +16,17 @@ class CovariateIndependentDiseaseCases:
     def generate(self, climate_data: ClimateData) -> np.ndarray:
         return self.generate_autoregressive(climate_data.population)
 
+    def generate_non_autoregressive(self, population: np.ndarray) -> np.ndarray:
+        white_noise = np.random.normal(0, 0.2, size=len(population))
+        #disease_cases = np.cumsum(white_noise)
+        #disease_cases = np.insert(disease_cases, 0, 0) - 0.5
+        disease_cases = apply_sigmoid_and_poisson_projection_with_capping(white_noise, population)
+        return disease_cases
+
     def generate_autoregressive(self, population: np.ndarray) -> np.ndarray:
-        white_noise = np.random.normal(0, 0.2, size=len(population) - 1)
-        disease_cases = np.cumsum(white_noise)
-        disease_cases = np.insert(disease_cases, 0, 0) - 0.5
-        disease_cases = apply_sigmoid_and_poisson_projection_with_capping(disease_cases, population)
+        white_noise = np.random.normal(0, 0.2, size=len(population)) . #todo make scale an adjustable argument
+        eta = np.cumsum(white_noise)
+        disease_cases = apply_sigmoid_and_poisson_projection_with_capping(eta, population)
         return disease_cases
 
     def get_name(self):

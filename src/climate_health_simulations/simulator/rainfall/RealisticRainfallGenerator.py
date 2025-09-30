@@ -10,11 +10,8 @@ class RealisticRainfallGenerator(RainfallGenerator):
     def generate(self, n_time_points_train: int, n_time_points_test: int):
         df = ISIMIP_dengue_harmonized['brazil'].to_pandas()
         total_time_points = n_time_points_train + n_time_points_test
-        rainfall = df['rainfall'].values[:total_time_points]
-        #rainfall = (rainfall/rainfall.max())*4 #not needed when standardize next line
+        rainfall = df['rainfall'].values[:total_time_points] #it wraps to next region when N exceeds the datapoints for each location in df
         scaled_rainfall = standardize_variable(rainfall)
-        desired_indices = np.arange(total_time_points) % len(scaled_rainfall)
-        scaled_rainfall = scaled_rainfall[desired_indices]
-        return scaled_rainfall.flatten()
+        return scaled_rainfall
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 
 from climate_health_simulations.simulator.temperature.TemperatureGenerator import TemperatureGenerator
-
+from climate_health_simulations.simulator.util import standardize_variable
 
 class SyntheticTemperatureGenerator(TemperatureGenerator):
     def generate(self, n_time_points_train: int, n_time_points_test: int):
@@ -20,4 +20,6 @@ class SyntheticTemperatureGenerator(TemperatureGenerator):
         temperature[train_indices] = 1
         temperature[test_indices] = 1
 
-        return temperature
+        scaled_temp = standardize_variable(temperature)
+
+        return scaled_temp

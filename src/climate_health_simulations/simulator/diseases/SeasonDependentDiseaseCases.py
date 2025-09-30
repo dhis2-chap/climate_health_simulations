@@ -18,15 +18,17 @@ class SeasonDependentDiseaseCases:
 
     def generate_non_autoregressive(self, climate_data):
         season_weights = generate_season_weights()
-        disease_cases = season_weights[climate_data.season - 1] * 2 - 3
-        disease_cases = apply_sigmoid_and_poisson_projection_with_capping(disease_cases, climate_data.population)
+        eta = season_weights[climate_data.season - 1]
+        disease_cases = apply_sigmoid_and_poisson_projection_with_capping(eta, climate_data.population)
         return disease_cases
 
     def generate_autoregressive(self, climate_data):
         season_weights = generate_season_weights()
         season_weights = season_weights[climate_data.season - 1]
-        disease_cases = np.cumsum(season_weights)/3 - 0.5
-        disease_cases = apply_sigmoid_and_poisson_projection_with_capping(disease_cases, climate_data.population)
+        n_time_points = len(climate_data.population)
+        white_noise = np.random.normal(0, 0.2, size=n_time_points)
+        eta = np.cumsum(season_weights)
+        disease_cases = apply_sigmoid_and_poisson_projection_with_capping(eta, climate_data.population)
         return disease_cases
 
     def get_name(self):
