@@ -21,7 +21,8 @@ class TestConfigGeneration:
                     {'type': 'season'}
                 ],
                 'population': 100},
-            'n_time_points': 10
+            'n_time_points_train': 10,
+            'n_time_points_test': 5
         }
         return Config(**config)
 

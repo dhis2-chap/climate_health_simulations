@@ -2,7 +2,7 @@ import numpy as np
 
 from climate_health_simulations.config.SimulationConfig import Config, DependentVariable
 from climate_health_simulations.simulator.ClimateData import ClimateData
-from climate_health_simulations.simulator.util import apply_sigmoid_scaling_to_cases, apply_sigmoid_and_poisson_projection_with_capping
+from climate_health_simulations.simulator.util import apply_sigmoid_and_poisson_projection_with_capping
 
 
 class CovariateIndependentDiseaseCases:
@@ -24,7 +24,7 @@ class CovariateIndependentDiseaseCases:
         return disease_cases
 
     def generate_autoregressive(self, population: np.ndarray) -> np.ndarray:
-        white_noise = np.random.normal(0, 0.2, size=len(population)) . #todo make scale an adjustable argument
+        white_noise = np.random.normal(0, 0.2, size=len(population)) #todo make scale an adjustable argument
         eta = np.cumsum(white_noise)
         disease_cases = apply_sigmoid_and_poisson_projection_with_capping(eta, population)
         return disease_cases

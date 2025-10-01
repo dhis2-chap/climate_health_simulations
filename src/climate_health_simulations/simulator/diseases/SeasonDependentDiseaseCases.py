@@ -24,10 +24,11 @@ class SeasonDependentDiseaseCases:
 
     def generate_autoregressive(self, climate_data):
         season_weights = generate_season_weights()
-        season_weights = season_weights[climate_data.season - 1]
+        eta_season = season_weights[climate_data.season - 1]
         n_time_points = len(climate_data.population)
         white_noise = np.random.normal(0, 0.2, size=n_time_points)
-        eta = np.cumsum(season_weights)
+        AR_term = np.cumsum(white_noise)
+        eta = eta_season + AR_term
         disease_cases = apply_sigmoid_and_poisson_projection_with_capping(eta, climate_data.population)
         return disease_cases
 

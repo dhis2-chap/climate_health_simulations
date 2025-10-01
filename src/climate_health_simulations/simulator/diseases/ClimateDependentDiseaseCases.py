@@ -2,8 +2,7 @@ import numpy as np
 
 from climate_health_simulations.config.SimulationConfig import Config, DependentVariable
 from climate_health_simulations.simulator.ClimateData import ClimateData
-from climate_health_simulations.simulator.util import apply_lag, standardize_variable, apply_sigmoid_scaling_to_cases, \
-    apply_sigmoid_and_poisson_projection_with_capping
+from climate_health_simulations.simulator.util import apply_lag, standardize_variable, apply_sigmoid_and_poisson_projection_with_capping
 
 
 class ClimateDependentDiseaseCases:
@@ -32,13 +31,13 @@ class ClimateDependentDiseaseCases:
         explanatory_climate_data = self.get_explanatory_climate_data(climate_data)
         n_time_points = len(explanatory_climate_data[0][0])
         white_noise = np.random.normal(0, 0.2, size=n_time_points)
-        eta = np.zeros(n_time_points)
+        eta = np.cumsum(white_noise) #the AR_term
         for covariate, lag in explanatory_climate_data:
             lagged_covariate = apply_lag(covariate, lag)
             scaled_covariate = standardize_variable(lagged_covariate[1:])
-            eta += scaled_covariate
-        eta += np.cumsum(white_noise)
-        disease_cases = apply_sigmoid_scaling_to_cases(eta, climate_data.population)
+            eta += scaled_covariate #adds the climate contributions
+
+        disease_cases = apply_sigmoid_and_poisson_projection_with_capping(eta, climate_data.population)
         return disease_cases
 
     def get_explanatory_climate_data(self, climate_data):

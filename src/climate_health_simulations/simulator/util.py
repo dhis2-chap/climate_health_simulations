@@ -18,14 +18,14 @@ def standardize_variable(data):
     scaled_data = scaler.fit_transform(data.reshape(-1, 1))
     return scaled_data.flatten()
 
-def apply_sigmoid_scaling_to_cases(disease_cases, population):
+def apply_sigmoid_scaling_to_eta(disease_cases, population):
     return np.int32((1 / (1 + np.exp(-disease_cases))) * population)
 
-#TODO make the median and max_rate adjustable by arguments from classes further up
+#TODO make the median and max_rate adjustable by arguments from classes further up wherever this function is called,i.e. in disease cases
 def apply_sigmoid_and_poisson_projection_with_capping(eta, population, median = 0.1, max_rate = 0.3):
     transformed_eta = eta + logit(median/max_rate) #adds a constant to adjust the median value
-    disease_cases = apply_sigmoid_scaling_to_cases(transformed_eta, population) * max_rate #scales to set the max rate
-    disease_cases = np.random.poisson(disease_cases)
+    poisson_rate = apply_sigmoid_scaling_to_eta(transformed_eta, population) * max_rate #scales to set the max rate
+    disease_cases = np.random.poisson(poisson_rate)
     disease_cases[disease_cases > population] = population[disease_cases > population] #ensures the sampled value is below the population
     return disease_cases
 
