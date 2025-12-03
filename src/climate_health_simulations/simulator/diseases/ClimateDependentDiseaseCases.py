@@ -34,7 +34,7 @@ class ClimateDependentDiseaseCases:
         eta = np.cumsum(white_noise) #the AR_term
         for covariate, lag in explanatory_climate_data:
             lagged_covariate = apply_lag(covariate, lag)
-            scaled_covariate = standardize_variable(lagged_covariate[1:])
+            scaled_covariate = standardize_variable(lagged_covariate[:]) #TODO handle the issue with using the lagged covariates which are not there
             eta += scaled_covariate #adds the climate contributions
 
         disease_cases = apply_sigmoid_and_poisson_projection_with_capping(eta, climate_data.population)
