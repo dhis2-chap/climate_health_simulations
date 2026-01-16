@@ -15,7 +15,8 @@ class ClimateHealth:
     def get_data(self):
         if len(self.disease_cases) != len(self.climate_data.rainfall):
             self.disease_cases = np.insert(self.disease_cases, 0, 0)
-        df = pd.DataFrame({'time_period': self.climate_data.season,
+        df = pd.DataFrame({'time_period': self.climate_data.time_period,
+                           'month': self.climate_data.month,
                            'rainfall': self.climate_data.rainfall,
                            'temperature': self.climate_data.temperature,
                            'disease_cases': self.disease_cases,

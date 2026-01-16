@@ -25,20 +25,24 @@ class Simulator:
         self.disease_cases_generator = DiseaseCasesGeneratorFactory()
 
     def run(self) -> ClimateHealth:
-        rain_is_realistic, rain_season_dependent,  = self.config.get_independent_variable_properties("rain")
-        temp_is_realistic, temp_season_dependent = self.config.get_independent_variable_properties("temperature")
+        rain_is_realistic, rain_season_dependent, rain_is_uniform = self.config.get_independent_variable_properties("rain")
+        temp_is_realistic, temp_season_dependent, _ = self.config.get_independent_variable_properties("temperature")
 
-        rain_gen = self.rain_factory.create_generator(rain_is_realistic, rain_season_dependent)
+        rain_gen = self.rain_factory.create_generator(rain_is_realistic, rain_season_dependent, rain_is_uniform)
         temp_gen = self.temp_factory.create_generator(temp_is_realistic, temp_season_dependent)
         disease_cases_gen = self.disease_cases_generator.create_generator(self.config.dependent_variable)
         pop_gen = self.population_factory.create_generator(False)  # todo: fix this to be dynamic
 
         # Generate climate data
-        season = (np.arange(self.config.n_time_points_train + self.config.n_time_points_test) % 12) + 1
-        rainfall = rain_gen.generate(self.config.n_time_points_train, self.config.n_time_points_test)
+        month = (np.arange(self.config.n_time_points_train + self.config.n_time_points_test) % 12) + 1
+        time_period = np.array([f"{2000 + i // 12}-{(i % 12) + 1:02d}" for i in
+                                range(self.config.n_time_points_train + self.config.n_time_points_test)])
+
+        rainfall = rain_gen.generate(self.config.n_time_points_train, self.config.n_time_points_test,
+                                     self.config.n_rainfall_train, self.config.n_rainfall_test)
         temperature = temp_gen.generate(self.config.n_time_points_train, self.config.n_time_points_test)
         population = pop_gen.generate(self.config.n_time_points_train + self.config.n_time_points_test, self.config.dependent_variable.population)
-        climate_data = ClimateData(rainfall, temperature, season, population)
+        climate_data = ClimateData(rainfall, temperature, month, time_period, population)
 
         disease_cases = disease_cases_gen.generate(climate_data)
         climate_health = ClimateHealth(climate_data, disease_cases, self.config.get_max_lag(), self.config.n_time_points_train)

@@ -6,6 +6,7 @@ class IndependentVariable(BaseModel):
     type: str
     is_realistic: bool
     is_season_dependent: Optional[bool] = None
+    is_uniform: Optional[bool] = None
 
     @model_validator(mode='before')
     @classmethod
@@ -29,6 +30,8 @@ class IndependentVariable(BaseModel):
 class ExplanatoryVariable(BaseModel):
     type: str
     lag: Optional[int] = None
+    min_val: Optional[float] = None
+    max_val: Optional[float] = None
 
     @model_validator(mode='before')
     @classmethod
@@ -47,6 +50,8 @@ class ExplanatoryVariable(BaseModel):
 
 class DependentVariable(BaseModel):
     is_autoregressive: bool
+    is_non_linear: bool
+    explanatory_variables: List[ExplanatoryVariable]
     explanatory_variables: List[ExplanatoryVariable]
     population: int
 
@@ -66,6 +71,8 @@ class Config(BaseModel):
     dependent_variable: DependentVariable
     n_time_points_train: int = Field(gt=0)
     n_time_points_test: int = Field(gt=0)
+    n_rainfall_train: int = Field(ge=0)
+    n_rainfall_test: int = Field(ge=0)
 
     def get_max_lag(self):
         max_lag = 0
@@ -77,5 +84,5 @@ class Config(BaseModel):
     def get_independent_variable_properties(self, var_type):
         for var in self.independent_variables:
             if var.type == var_type:
-                return var.is_realistic, var.is_season_dependent
+                return var.is_realistic, var.is_season_dependent, var.is_uniform
         return None

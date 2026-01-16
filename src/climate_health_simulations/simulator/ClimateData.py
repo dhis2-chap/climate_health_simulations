@@ -7,7 +7,8 @@ import numpy as np
 class ClimateData:
     rainfall: np.ndarray
     temperature: np.ndarray
-    season: np.ndarray
+    month: np.ndarray
+    time_period: np.ndarray
     population: np.ndarray
 
 
